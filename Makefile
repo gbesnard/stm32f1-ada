@@ -1,19 +1,29 @@
+TOOLCHAIN_PATH = ~/opt/GNAT/2020-arm-elf/bin/
+
+CC = $(TOOLCHAIN_PATH)/arm-eabi-gcc
+LD = $(TOOLCHAIN_PATH)/arm-eabi-ld
+OBJCPY = $(TOOLCHAIN_PATH)/arm-eabi-objcopy
+OBJDUMP = $(TOOLCHAIN_PATH)/arm-eabi-objdump
+GDB = $(TOOLCHAIN_PATH)/arm-eabi-gdb
+
+CFLAGS = -Iruntime -mthumb -march=armv7-m -mfloat-abi=soft -g
+
 all: program.bin program.S
 
 program.S: program.elf
-	~/opt/GNAT/2020-arm-elf/bin/arm-eabi-objdump -D program.elf > program.S
+	$(OBJDUMP) -D program.elf > program.S
 
 program.o: program.adb
-	~/opt/GNAT/2020-arm-elf/bin/arm-eabi-gcc -c -mtune=cortex-m3 -mthumb -march=armv7-m -mfloat-abi=soft -g program.adb
+	$(CC) $(CFLAGS) -c program.adb
 
 program.elf: program.o
-	~/opt/GNAT/2020-arm-elf/bin/arm-eabi-ld -T flash.ld -o program.elf program.o
+	$(LD) -T flash.ld -o program.elf program.o
 
 program.bin: program.elf
-	~/opt/GNAT/2020-arm-elf/bin/arm-eabi-objcopy -O binary program.elf program.bin
+	$(OBJCPY) -O binary program.elf program.bin
 
 gdb:
-	~/opt/GNAT/2020-arm-elf/bin/arm-eabi-gdb --tui program.elf
+	$(GDB) --tui program.elf
 
 flash:
 	st-flash write program.bin 0x8000000

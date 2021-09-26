@@ -1,10 +1,12 @@
 package body Program is
 
 procedure Run is
-   i : Integer := 0;
+   i   : Unsigned_32 := 0;
+   foo : Unsigned_32 := 0;
 begin
+	foo := GPIOC.CRL;
 	loop
-		i := i + 1;
+		i := i + 1;		
 	end loop;
 end Run;
 
