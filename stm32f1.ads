@@ -4,6 +4,18 @@ with Interfaces; use Interfaces;
 
 package STM32F1 is
 
+	type Word      is new Interfaces.Unsigned_32;
+	type Half_Word is new Interfaces.Unsigned_16;
+	type Byte      is new Interfaces.Unsigned_8;
+
+	type Bits_1  is mod 2**1 with Size => 1;
+	type Bits_2  is mod 2**2 with Size => 2;
+	type Bits_4  is mod 2**4 with Size => 4;
+
+	type Bits_32x1 is array (0 .. 31) of Bits_1 with Pack, Size => 32;
+	type Bits_16x2 is array (0 .. 15) of Bits_2 with Pack, Size => 32;
+	type Bits_8x4  is array (0 ..  7) of Bits_4 with Pack, Size => 32;
+
 	--  Define address bases for the various system components
 	 
 	Peripheral_Base : constant := 16#4000_0000#; -- Peripheral base address
@@ -12,32 +24,12 @@ package STM32F1 is
 	APB2_Peripheral_Base : constant := Peripheral_Base + 16#0001_0000#;
 	AHB_Peripheral_Base  : constant := Peripheral_Base + 16#0002_0000#;
 
+	RCC_Base   : constant := AHB_Peripheral_Base + 16#00001000#;
+
 	GPIOA_Base : constant := APB2_Peripheral_Base + 16#8000#;
 	GPIOB_Base : constant := APB2_Peripheral_Base + 16#C000#;
 	GPIOC_Base : constant := APB2_Peripheral_Base + 16#1000#;
 	GPIOD_Base : constant := APB2_Peripheral_Base + 16#1400#;
 	GPIOE_Base : constant := APB2_Peripheral_Base + 16#1800#;
-
-	-- Define registers	
-
-	type GPIO_Register is record
-		CRL  : Unsigned_32; -- port configuration register low
-		CRH  : Unsigned_32; -- port configuration register high
-		IDR  : Unsigned_32; -- port input data register
-		ODR  : Unsigned_32; -- port output data register
-		BSRR : Unsigned_32; -- port bit set/reset register
-		BRR  : Unsigned_32; -- port bit reset register
-		LCKR : Unsigned_32; -- port configuration lock register
-	end record;
-
-	for GPIO_Register use record
-		CRL  at 0  range 0 .. 31;
-		CRH  at 4  range 0 .. 31;
-		IDR  at 8  range 0 .. 31;
-		ODR  at 12 range 0 .. 31;
-		BSRR at 16 range 0 .. 31;
-		BRR  at 20 range 0 .. 31;
-		LCKR at 24 range 0 .. 31;
-	end record;
 
 end STM32F1;

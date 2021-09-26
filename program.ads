@@ -1,6 +1,4 @@
 with System;
-with Interfaces; use Interfaces;
-with Registers; use Registers;
 
 package Program is
 
